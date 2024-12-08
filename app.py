@@ -68,7 +68,6 @@ def Understanding():
     st.write("Jumlah Atribut : ", len(df.axes[1]))
 
     st.header("Check Missing Value")
-    df['stalk-root'].replace(['?'], pd.NA, inplace=True)
     st.write(df.isna().sum())
     
     st.header("Describe Data")
@@ -122,16 +121,12 @@ def Preprocessing():
     st.title("Preprocessing")
 
     df = pd.read_csv("mushrooms.csv")
-    df['stalk-root'].replace(['?'], np.nan, inplace=True)
 
     st.header("Label Encoding")
     label_map = {}
     le = LabelEncoder()
     for feature in df:
-        nan_mask = df[feature].isna()
-        df[feature] = df[feature].fillna('missing')
         df[feature] = le.fit_transform(df[feature].astype(str))
-        df[feature][nan_mask] = np.nan
         label_map[feature] = dict(zip(le.classes_, le.transform(le.classes_)))
     st.write(df)
     
@@ -143,16 +138,6 @@ def Preprocessing():
 
     label_df = pd.DataFrame(label_table)
     st.table(label_df)
-
-    st.header("Imputation")
-    st.write("Imputasi data menggunakan KNNImputer dengan K=5")
-    st.write("Sebelum di imputasi")
-    st.write(df)
-
-    imputer = KNNImputer(n_neighbors=5)
-    df = pd.DataFrame(imputer.fit_transform(df), columns=df.columns)
-    st.write("Sesudah di imputasi")
-    st.write(df)
 
     st.header("Feature Selection")
     st.write("Fitur seleksi menggunakan Information Gain dengan threshold = 0.05")
